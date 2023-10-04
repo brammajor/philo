@@ -6,7 +6,7 @@
 /*   By: brmajor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 10:57:37 by brmajor           #+#    #+#             */
-/*   Updated: 2023/09/13 16:14:40 by brmajor          ###   ########.fr       */
+/*   Updated: 2023/10/04 15:08:42 by brmajor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ t_philo init_philo(t_info *info)
 	t_philo philo;
 
 	philo.dead = 0;
-	philo.time_left = info->ttdie;
 	philo.times_eaten = 0;
 	philo.info = info;
 	return (philo);
@@ -63,11 +62,12 @@ void	destroy_mutex(t_info *info)
 int	main(int ac, char **av)
 {
 	t_info	info;
-	t_philo philo;
+	t_philo	*philo;
 
+	philo = NULL;
 	check_args(ac, av);
 	info = init_info(av);
-	philo = init_philo(&info);
-	start_threads(&info, &philo);
+	philo = start_threads(&info, philo);
+	observer(&info, philo);
 	destroy_mutex(&info);
 }

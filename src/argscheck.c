@@ -6,7 +6,7 @@
 /*   By: brmajor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 12:05:08 by brmajor           #+#    #+#             */
-/*   Updated: 2023/09/13 15:59:09 by brmajor          ###   ########.fr       */
+/*   Updated: 2023/10/04 11:58:16 by brmajor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,4 @@ void	check_args(int ac, char **av)
 		error_handler("Error: number of arguments");
 	if (check_int(ac, av) || check_digit(ac, av))
 		error_handler("Error: arguments");
-	if (ft_atoi(av[1]) == 1)
-		error_handler("Error: the lonely philosopher cannot survive");
 }

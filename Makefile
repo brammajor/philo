@@ -6,11 +6,11 @@
 #    By: brmajor <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/08 10:28:55 by brmajor           #+#    #+#              #
-#    Updated: 2023/09/08 13:07:22 by brmajor          ###   ########.fr        #
+#    Updated: 2023/10/04 13:56:46 by brmajor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC = src/philo.c src/ft_atoi.c src/argscheck.c src/utils.c src/threading.c
+SRC = src/philo.c src/ft_atoi.c src/argscheck.c src/utils.c src/threading.c src/behavior.c
 
 CC = gcc -g -Wall -Werror -Wextra
 
