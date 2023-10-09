@@ -6,11 +6,24 @@
 /*   By: brmajor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 10:57:37 by brmajor           #+#    #+#             */
-/*   Updated: 2023/10/09 12:33:51 by brmajor          ###   ########.fr       */
+/*   Updated: 2023/10/09 16:40:17 by brmajor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
+
+void	destroy_mutex(t_info *info)
+{
+	int		i;
+
+	i = 0;
+	while (i < info->numofphilo)
+	{
+		pthread_mutex_destroy(&info->fork[i]);
+		i++;
+	}
+	free(info);
+}
 
 void	init_info(t_info *info, char **av)
 {
@@ -37,4 +50,5 @@ int	main(int ac, char **av)
 	check_args(ac, av);
 	init_info(info, av);
 	start_threads(info);
+	destroy_mutex(info);
 }

@@ -6,7 +6,7 @@
 /*   By: brmajor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 13:05:14 by brmajor           #+#    #+#             */
-/*   Updated: 2023/10/09 15:44:16 by brmajor          ###   ########.fr       */
+/*   Updated: 2023/10/09 16:31:28 by brmajor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,19 @@ void	start_threads(t_info *info)
 		if (status == 1)
 		{
 			detatch_all(p);
+			usleep(200);
 			printf("%ld %i died\n", (curr_time() - p[i].start_time), p[i].n);
 			return ;
 		}
 		else if (status == 2)
 		{
-			pthread_join(p[i].thread_id, NULL);
+			usleep(200);
+			i = 0;
+			while (i < info->numofphilo)
+			{
+				pthread_join(p[i].thread_id, NULL);
+				i++;
+			}
 			return ;
 		}
 		i++;
