@@ -6,75 +6,87 @@
 /*   By: brmajor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 13:05:14 by brmajor           #+#    #+#             */
-/*   Updated: 2023/10/04 15:26:47 by brmajor          ###   ########.fr       */
+/*   Updated: 2023/10/09 15:44:16 by brmajor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-void	lock_forks(t_philo *p)
+void	detatch_all(t_philo *p)
 {
-	t_info *info;
+	int		i;
 
-	info = p->info;
-	pthread_mutex_lock(&info->fork[p->n - 1]);
-	printf("%ld %i has taken a fork\n", (curr_time() - p->start_time), p->n);
-	if (p->n < info->numofphilo)
-		pthread_mutex_lock(&info->fork[p->n]);
-	else
-		pthread_mutex_lock(&info->fork[0]);
-	printf("%ld %i has taken a fork\n", (curr_time() - p->start_time), p->n);
+	i = 0;
+	while (i < p->info->numofphilo)
+	{
+		pthread_detach(p[i].thread_id);
+		i++;
+	}
 }
 
-void	unlock_forks(t_philo *p)
+void	init_philo(t_info *info, t_philo *p, int i, long int time)
 {
-	t_info	*info;
-
-	info = p->info;
-	pthread_mutex_unlock(&info->fork[p->n - 1]);
-	if (p->n < info->numofphilo)
-		pthread_mutex_unlock(&info->fork[p->n]);
-	else
-		pthread_mutex_unlock(&info->fork[0]);
+		p[i].info = info;
+		p[i].n = i + 1;
+		p[i].dead = 0;
+		p[i].times_eaten = 0;
+		p[i].start_time = time;
+		p[i].last_meal = time;
 }
 
 void	*philo_behavior(void *arg)
 {
-	t_philo *p;
+	t_philo	*p;
 
 	p = (t_philo *)arg;
 	while (1)
 	{
 		if (p->n % 2 == 0)
-			usleep(10);
-		lock_forks(p);		
-		p = eat(p);
+			usleep(50);
+		lock_forks(p);
+		eat(p);
 		unlock_forks(p);
-		if (p->times_eaten == p->info->numofmeals)
+		if (p->times_eaten == p->info->numofmeals || p->dead == 1)
 			break ;
-		p = sleep_and_think(p);
+		sleep_and_think(p);
 	}
 	return (arg);
 }
 
-t_philo	*start_threads(t_info *info, t_philo *philo)
+void	start_threads(t_info *info)
 {
 	int			i;
 	long int	time;
+	t_philo		p[info->numofphilo];
+	int			status;
 
 	i = 0;
-	philo = (t_philo *)malloc(sizeof(t_philo) * info->numofphilo);
 	time = curr_time();
 	while (i < info->numofphilo)
 	{
-		philo[i] = init_philo(info);
-		philo[i].n = i + 1;
-		philo[i].start_time = time;
-		philo[i].last_meal = time;
-		if (pthread_create(&philo[i].thread_id, NULL, philo_behavior, (void *)&philo[i]) != 0)
+		init_philo(info, p, i, time);
+		if (pthread_create(&p[i].thread_id, NULL,
+					philo_behavior, (void *)&p[i]) != 0)
 			error_handler("Error: creating thread");
 		i++;
 		usleep(50);
 	}
-	return (philo);
+	while (1)
+	{
+		if (i >= info->numofphilo)
+			i = 0;
+		status = observer(&p[i]);
+		if (status == 1)
+		{
+			detatch_all(p);
+			printf("%ld %i died\n", (curr_time() - p[i].start_time), p[i].n);
+			return ;
+		}
+		else if (status == 2)
+		{
+			pthread_join(p[i].thread_id, NULL);
+			return ;
+		}
+		i++;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: brmajor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 12:15:02 by brmajor           #+#    #+#             */
-/*   Updated: 2023/10/04 12:11:39 by brmajor          ###   ########.fr       */
+/*   Updated: 2023/10/09 11:23:23 by brmajor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,6 @@ int		ft_isdigit(int i)
 {
 	if (i >= '0' && i <= '9')
 		return (1);
-	return (0);
-}
-
-int		ft_usleep(useconds_t time)
-{
-	u_int64_t	start;
-	start = curr_time();
-	while ((curr_time() - start) < time)
-		usleep(time / 10);
 	return (0);
 }
 

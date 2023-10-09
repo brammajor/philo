@@ -6,7 +6,7 @@
 /*   By: brmajor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 10:29:49 by brmajor           #+#    #+#             */
-/*   Updated: 2023/10/04 13:52:24 by brmajor          ###   ########.fr       */
+/*   Updated: 2023/10/09 15:30:43 by brmajor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,27 +33,39 @@ typedef struct s_info
 
 typedef struct s_philo
 {
-	int			n;
-	int			dead;
-	int			eating;
-	int			times_eaten;
-	long int	start_time;
-	long int	last_meal;
-	t_info		*info;
-	pthread_t	thread_id;
+	int				n;
+	int				dead;
+	int				times_eaten;
+	long int		start_time;
+	long int		last_meal;
+	pthread_t		thread_id;
+	t_info			*info;
 }	t_philo;
 
 
-t_philo		init_philo(t_info *info);
+void		check_args(int ac, char **av);
 void		error_handler(char *msg);
-t_philo		*start_threads(t_info *info, t_philo *philo);
-int			ft_atoi(const char *str);
+
+//behavior.c
+void	eat(t_philo *p);
+void	sleep_and_think(t_philo *p);
+void	lock_forks(t_philo *p);
+void	unlock_forks(t_philo *p);
+int		observer(t_philo *p);
+
+//philo.c
+void	init_info(t_info *info, char **av);
+
+//threading.c
+void	start_threads(t_info *info);
+void	*philo_behavior(void *arg);
+
+//ft_atoi.c
+int		ft_atoi(const char *str);
+
+//utils.c
 int			ft_strlen(char *str);
 int			ft_isdigit(int i);
-void		check_args(int ac, char **av);
-t_philo		*eat(t_philo *p);
-t_philo		*sleep_and_think(t_philo *p);
 long int	curr_time(void);
-void		observer(t_info *info, t_philo *philo);
 
 #endif
